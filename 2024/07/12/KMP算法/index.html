@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Archives | lkasniveの小窝</title>
+    <title>KMP算法 | lkasniveの小窝</title>
     <meta name="author" content="lkasnive" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -42,6 +42,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -155,137 +159,124 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>KMP算法</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/7/12
+        </span>
+        
+        <span class="category">
+            <a href="/categories/OI/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                OI
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
             
-<div id="archives">
-    
-    <div id="timeline-wrap" ref="timeline">
-        
-        <div class="timeline" data-title="helloworld">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2024/7/10</div>
-                <a href="/2024/07/10/hello-world/">
-                    <h3>Hello World</h3>
+            
+            <span class="tag">
+                
+                <a href="/tags/C/" style="color: #ff7d73">
+                    C++
                 </a>
-                <div class="info">
-                    
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline" data-title="kmp算法">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2024/7/12</div>
-                <a href="/2024/07/12/KMP%E7%AE%97%E6%B3%95/">
-                    <h3>KMP算法</h3>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/OI/" style="color: #00bcd4">
+                    OI
                 </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/OI/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            OI
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <i class="fa-solid fa-tags fa-fw"></i>
-                        </span>
-                        
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/C/" style="color: #00bcd4">
-                                C++
-                            </a>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/OI/" style="color: #03a9f4">
-                                OI
-                            </a>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #00bcd4">
-                                字符串
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline" data-title="关于set实现结构体自动去重原理的推论">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2024/10/9</div>
-                <a href="/2024/10/09/%E5%85%B3%E4%BA%8Eset%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8E%BB%E9%87%8D%E7%9A%84%E6%8E%A8%E8%AE%BA/">
-                    <h3>关于set实现结构体自动去重原理的推论</h3>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #ff7d73">
+                    字符串
                 </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/STL/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            STL
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <i class="fa-solid fa-tags fa-fw"></i>
-                        </span>
-                        
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/C/" style="color: #03a9f4">
-                                C++
-                            </a>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/OI/" style="color: #00a596">
-                                OI
-                            </a>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/STL/" style="color: #ffa2c4">
-                                STL
-                            </a>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="color: #ff7d73">
-                                数据结构
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
+            </span>
+            
+        </span>
         
     </div>
+    
+    <div class="content" v-pre>
+        <p>&nbsp;</p>
+<h2 id="1-引入"><a href="#1-引入" class="headerlink" title="1.引入"></a>1.引入</h2><p>现在有两个字符串$A$和$B$，求$B$是否是$A$的子串，如果是，输出第一个匹配的位置$(len_A &#x3D; n\quad len_B &#x3D; m)$</p>
+<p>$A &#x3D; bacbababaabcbab$</p>
+<p>$B &#x3D; ababaca$</p>
+<p>&nbsp;</p>
+<span id="more"></span>
+
+<h3 id="朴素算法"><a href="#朴素算法" class="headerlink" title="朴素算法"></a>朴素算法</h3><p>对于朴素算法，也就是暴力，我们将$B$的每一位于$A$进行比较。这里使用两个指针$i, j$表示匹配到$A$和$B$的哪一位。如果$A[i] &#x3D;&#x3D; B[j]\quad i,j$,同时加一，如果不相等，则将$B[1]$与$A[i]$进行比较。如此重复，即可完成。当$j &#x3D;&#x3D; m$时，表示匹配完成，输出$i - j + 1$。</p>
+<p>但是对于朴素算法,最坏情况下，时间复杂度会达到$O(mn)$<del>sb才会这么写</del>。于是，我们KMP的作用就来了！！！！！</p>
+<h3 id="让我们热烈欢迎！！！！"><a href="#让我们热烈欢迎！！！！" class="headerlink" title="让我们热烈欢迎！！！！"></a>让我们热烈欢迎！！！！</h3><p>&nbsp;</p>
+<h2 id="2-KMP算法概述"><a href="#2-KMP算法概述" class="headerlink" title="2.KMP算法概述"></a>2.KMP算法概述</h2><p>KMP算法则是一种时间复杂度十分优秀的算法，即使在最坏情况下，时间复杂度也能达到线性也就是$O(n)$。</p>
+<p>考虑为什么朴素算法那么慢</p>
+<p>当在这种情况时：</p>
+<p>$b,a,c,b,a,b,a,b,a,a,b,c,b,a,b$</p>
+<p>$\qquad ;,a,b,a,b,a, c ,a$</p>
+<p>此时若$i &#x3D; 9, j &#x3D; 5$会发现$A[i + 1]$和$B[j + 1]$不匹配，作为朴素算法，会将$A[6]$与$B[1]$进行比较，但是，我们发现$A[1-3]$和$B[6-9]$是完全相等的，KMP算法就会将$B$后移两位，直接将$A[10]$和$B[4]$进行比较这样就能大大节省时间。</p>
+<h3 id="形式化的讲："><a href="#形式化的讲：" class="headerlink" title="形式化的讲："></a>形式化的讲：</h3><p>此时$A[s + 1…s+k]$和$B[1…k]$匹配上了，但是$A[s+k+1]$和$B[k+1]$不匹配</p>
+<p>朴素算法：是将$A[s+2]$和$B[1]$重新比较。</p>
+<p>KMP算法：是寻找一个最大的$x$使得$A[s+1…s+k]$的后$x<br>$个字符和$B[1…k]$的前$x$个字符匹配。对于这部分，可以不用判断。</p>
+<p>更具体的，由于$A[s + 1…s+k]$和$B[1…k]$匹配上了，即$A[s + 1…s+k]&#x3D;&#x3D;B[1…k]$，那么我们寻找$x$的过程，就是寻找一个尽可能大的$x$使得$B$的前$x$个字符等于$B$的后$x$个字符。我们记$x&#x3D;next[k],x&lt;k$。</p>
+<p>对于本文出现的$B$串，我们可以构建一个$next$数组，$next[,]&#x3D;{0,0,1,2,3,0,1}$，若$A[s + 1…s+k]&#x3D;&#x3D;B[1…k]$且$A[s+k+1]\neq B[k+1]$，那么我们将$A[s+k+1]$与$B[next[k]+1]$进行比较，直到$A[s+k+1]$与$B[next[k]+1]$相等或$next[k]&#x3D;&#x3D;0$</p>
+<pre><code class="c">void KMP()
+&#123;
+    int j = 0;
+    for(int i = 1; i &lt;= n; i++)
+    &#123;
+        while(j &gt; 0 &amp;&amp; B[j + 1] != A[i])
+            j = next[j];
+        if(B[j + 1] == A[i])
+            j++;
+        if(j == m)
+            j = next[j];//匹配完成，寻找下一处匹配
+    &#125;
+&#125;
+</code></pre>
+<p>构建$next$数组的过程，其实就是模式串自我匹配的过程，代码与KMP过程很像</p>
+<pre><code class="c">void getnext()
+&#123;
+    int k = 0;
+    next[1] = 0;
+    for(int i = 2; i &lt;= m; i++)
+    &#123;
+        while(k &gt; 0 &amp;&amp; B[k + 1] != B[i])
+            k = next[k];
+        if(B[k + 1] == B[i])
+            k++;
+        next[i] = k;			
+    &#125;
+&#125;
+</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3375">P3375</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4391">P4391</a></p>
+<h3 id="完结撒花！！！"><a href="#完结撒花！！！" class="headerlink" title="完结撒花！！！"></a>完结撒花！！！</h3><p>看在我写博客的份上，dalao赏一个赞呗！</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
 </div>
 
             <footer id="footer">
@@ -316,6 +307,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>

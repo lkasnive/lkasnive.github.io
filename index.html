@@ -186,6 +186,176 @@
         
 
 <div class="post">
+    <a href="/2024/10/09/%E5%85%B3%E4%BA%8Eset%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8E%BB%E9%87%8D%E7%9A%84%E6%8E%A8%E8%AE%BA/">
+        <h2 class="post-title">关于set实现结构体自动去重原理的推论</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/STL/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                STL
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/10/9
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <p>先说结论</p>
+<h3 id="在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。"><a href="#在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。" class="headerlink" title="在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。"></a>在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。</h3><p>&nbsp; 首先我们先看这段结构体定义，目的是先按num相等进行去重，再按key降序排列。</p>
+<pre><code class="cpp">struct node&#123;
+    int num;
+    int key;
+    bool operator &lt; (const node &amp;b) const&#123;
+        if(num == b.num)
+            return false;
+        else&#123;
+            if(key != b.key)
+                return key &gt; b.key;
+            return num &gt; b.num;
+        &#125;
+    &#125;
+&#125;;
+</code></pre>
+<p>然后我们测试以下四组输入数据</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/10/10/ac431893d4dd75f6.png"><br><img src="https://s3.bmp.ovh/imgs/2024/10/10/8f2803b969051f6f.png"><br><img src="https://s3.bmp.ovh/imgs/2024/10/10/b16232c379aabd2f.png"><br><img src="https://s3.bmp.ovh/imgs/2024/10/10/86bf343272fe3eaf.png"></p>
+<p>从第一组数据来看，我们的去重要求确实得到了满足，第二个插入的(3, 7)并没有进入set。但我们看到第二组数据，我们后插入(3, 7)set却没有正确的执行我们想象中的去重操作。首先我们要知道，set容器在判定已有元素a和新插入元素b是否相等时，是这么做的：</p>
+<p>1）将a作为左操作数，b作为有操作数，调用比较函数，并返回比较值</p>
+<p>2）将b作为左操作数，a作为有操作数，再调用一次比较函数，并返回比较值。</p>
+<p>如果1、2两步的返回值都是false，则认为a、b是相等的，则b不会被插入set容器中</p>
+<p>如果1、2两步的返回值都是true，则可能发生未知行为</p>
+<p>按照我们结构体定义的优先级，(3, 7)没有被正确去重，只能说明在插入时它并没有与(3, 1)进行比较，而是与其他元素比较后直接确定了大小顺序就插入了。结合第三组数据，难道set插入时是按顺序从头比较吗？显然不是的，因为第四组数据我们把(2, 4)换成(3, 4)就能成功去重了。所以(2, 4)的插入应当影响了set中数据存储的结构。</p>
+<p>而我们又知道set底层使用红黑树实现的。所以我们做出如下猜想验证三，四组数据的结果。</p>
+<p>对于第三组数据，首先插入(3, 1)为根节点，后插入(3, 7)与根节点比较发现重复，不插入。再插入(1, 2)由于我们按key的大小排序(1, 2) &gt; (3, 1)因此放到右子节点。(2, 4)同理，放到(1, 2)的右子节点。此时，树的平衡性丧失,所以要进行左旋使树重新平衡。左旋后根节点为(1, 2)，左子节点(3, 1)， 右子节点(2, 4)。再插入(3, 7)时，先与根节点比较，发现大于，后(3, 7)进入右子树，与(2, 4)比较后就直接确定顺序了，不会与(3, 1)比较，这就导致了无法正确去重。</p>
+<p>而对于第四组数据，我们可以发现，在插入(1, 2)后，树的平衡性并没有丧失，所以根节点还是(3, 1)所以后插入的元素还是会和根节点进行比较，从而能够正确的去重。</p>
+<p>为了进一步验证，我们可以将后插入的(3, 7)换为(3, 0)这样它在与左旋后的根节点(1, 2)比较后就会进入左子树与(3, 1)比较，从而能够被正确去重。实验数据如下：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/10/10/62a3201cb0ae708c.png"></p>
+<p>发现(3, 0)确实没有被插入，因此我们的猜想的到了验证。</p>
+<hr>
+<p>其实出现这种情况的本质原因是我们判断重复和排序的关键字不同。导致num相同的元素可能因为与根节点key的大小关系不同而被分到两个完全不同的子树中去。而如果我们如果将重复和排序的关键字换成如下相同的样子：</p>
+<pre><code class="cpp">struct node&#123;
+    int num;
+    int key;
+    bool operator &lt; (const node &amp;b) const&#123;
+        if(num == b.num)
+            return false;
+        return num &gt; a.num;
+        return key &gt; a.key;
+    &#125;
+&#125;;
+</code></pre>
+<p>则不会出现无法去重的情况。因为在后者的情况下，只要num相同，与其他元素的大小关系就会确定，就会被存储在红黑树中的相同位置。</p>
+<p>从另一个角度说，我们选择set，是因为它有每个操作log级别的优秀复杂度。而log级别的插入操作不可能做到和所有元素都进行比较。</p>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/C/" style="color: #ff7d73">C++</a>
+        </span>
+        
+        <span class="tag">
+            
+            <a href="/tags/OI/" style="color: #00a596">OI</a>
+        </span>
+        
+        <span class="tag">
+            
+            <a href="/tags/STL/" style="color: #ff7d73">STL</a>
+        </span>
+        
+        <span class="tag">
+            
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="color: #00a596">数据结构</a>
+        </span>
+        
+    </div>
+    <a href="/2024/10/09/%E5%85%B3%E4%BA%8Eset%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8E%BB%E9%87%8D%E7%9A%84%E6%8E%A8%E8%AE%BA/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2024/07/12/KMP%E7%AE%97%E6%B3%95/">
+        <h2 class="post-title">KMP算法</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/OI/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                OI
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/7/12
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <p>&nbsp;</p>
+<h2 id="1-引入"><a href="#1-引入" class="headerlink" title="1.引入"></a>1.引入</h2><p>现在有两个字符串$A$和$B$，求$B$是否是$A$的子串，如果是，输出第一个匹配的位置$(len_A &#x3D; n\quad len_B &#x3D; m)$</p>
+<p>$A &#x3D; bacbababaabcbab$</p>
+<p>$B &#x3D; ababaca$</p>
+<p>&nbsp;</p>
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/C/" style="color: #00a596">C++</a>
+        </span>
+        
+        <span class="tag">
+            
+            <a href="/tags/OI/" style="color: #03a9f4">OI</a>
+        </span>
+        
+        <span class="tag">
+            
+            <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #ff7d73">字符串</a>
+        </span>
+        
+    </div>
+    <a href="/2024/07/12/KMP%E7%AE%97%E6%B3%95/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
     <a href="/2024/07/10/hello-world/">
         <h2 class="post-title">Hello World</h2>
     </a>
@@ -207,16 +377,6 @@
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="c">
 </code></pre>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
             
         </div>
     </div>
