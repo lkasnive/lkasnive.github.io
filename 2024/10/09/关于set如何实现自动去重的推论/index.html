@@ -189,28 +189,28 @@
             
             <span class="tag">
                 
-                <a href="/tags/C/" style="color: #03a9f4">
-                    C++
-                </a>
-            </span>
-            
-            <span class="tag">
-                
-                <a href="/tags/OI/" style="color: #00a596">
+                <a href="/tags/OI/" style="color: #03a9f4">
                     OI
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/STL/" style="color: #ffa2c4">
+                <a href="/tags/C/" style="color: #ff7d73">
+                    C++
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/STL/" style="color: #00bcd4">
                     STL
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="color: #00bcd4">
+                <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="color: #ff7d73">
                     数据结构
                 </a>
             </span>
@@ -221,7 +221,10 @@
     
     <div class="content" v-pre>
         <p>先说结论</p>
-<h3 id="在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。"><a href="#在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。" class="headerlink" title="在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。"></a>在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。</h3><p>&nbsp; 首先我们先看这段结构体定义，目的是先按num相等进行去重，再按key降序排列。</p>
+<h3 id="在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。"><a href="#在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。" class="headerlink" title="在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。"></a>在每个操作均为log复杂度的前提下，set无法在判断顺序和重复关键字不同时完成对结构体元素的去重。</h3><p>&nbsp;</p>
+<span id="more"></span>
+
+<p>&nbsp; 首先我们先看这段结构体定义，目的是先按num相等进行去重，再按key降序排列。</p>
 <pre><code class="cpp">struct node&#123;
     int num;
     int key;
