@@ -701,7 +701,13 @@ blockquote {
     padding: 0 15px;
 }
 body {
-    background: #f6f8fa;
+    /*background: #f6f8fa;*/
+    background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url('https://s2.loli.net/2025/01/14/TmibKpNytQuW6RX.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-attachment: fixed;
     color: #1e3e3f;
     font: 500 14px Lexend, "Noto Sans SC", sans-serif;
     overflow-x: hidden;
